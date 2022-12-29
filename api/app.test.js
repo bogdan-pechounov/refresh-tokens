@@ -7,4 +7,8 @@ describe('GET /', () => {
     expect(response.statusCode).toBe(200)
     expect(response.text.length).toBeGreaterThan(0)
   })
+
+  test('test', () => {
+    expect(1).toBe(1)
+  })
 })
