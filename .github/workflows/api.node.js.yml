@@ -6,8 +6,12 @@ name: API CI
 on:
   push:
     branches: ['main']
+    paths:
+      - 'api/src/**'
   pull_request:
     branches: ['main']
+    paths:
+      - 'api/src/**'
 
 jobs:
   build:
