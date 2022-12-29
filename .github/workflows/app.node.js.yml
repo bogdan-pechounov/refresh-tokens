@@ -6,8 +6,12 @@ name: React CI
 on:
   push:
     branches: ['main']
+    paths:
+      - 'app/src/**'
   pull_request:
     branches: ['main']
+    paths:
+      - 'app/src/**'
 
 jobs:
   build:
