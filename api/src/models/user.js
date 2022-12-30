@@ -49,6 +49,7 @@ userSchema.pre('validate', async function (next) {
   if (this.password !== this.confirmPassword) {
     this.invalidate('confirmPassword', 'please enter the same password')
   }
+
   if (this.password?.length >= 6) {
     this.hashedPassword = await hashPassword(this.password)
   } else {
