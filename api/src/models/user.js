@@ -1,74 +1,56 @@
 const mongoose = require('mongoose')
 const { isEmail } = require('validator')
-const { hashPassword } = require('../controllers/authController')
+const { hashPassword } = require('../utils/password')
 
-const userSchema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-      unique: true,
-      required: [true, 'Username required'],
-      minLength: [4, 'Username should have at least 4 characters'],
-    },
-    email: {
-      type: String,
-      unique: true,
-      sparse: true,
-      validate: [isEmail, 'Please enter a valid email.'],
-    },
-    hashedPassword: {
-      type: String,
-      select: false,
-      required: [true, 'Password required'],
-    },
+//todo profile picture
+//todo oauth
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: [true, 'Username required'],
+    minLength: [4, 'Username should have at least 4 characters'],
   },
-  {
-    virtuals: {
-      password: {
-        get() {
-          return this._password
-        },
-        async set(v) {
-          this._password = v
-        },
-      },
-      confirmPassword: {
-        get() {
-          return this._confirmPassword
-        },
-        set(v) {
-          this._confirmPassword = v
-        },
-      },
-    },
-  }
-)
-
-//check passwords
-userSchema.pre('validate', async function (next) {
-  if (this.password !== this.confirmPassword) {
-    this.invalidate('confirmPassword', 'please enter the same password')
-  }
-
-  if (this.password?.length >= 6) {
-    this.hashedPassword = await hashPassword(this.password)
-  } else {
-    this.invalidate('password', 'Password should have at least 6 characters')
-  }
-  next()
+  email: {
+    type: String,
+    unique: true,
+    sparse: true, //ignore documents without the email field when determining uniqueness
+    validate: [isEmail, 'Please enter a valid email.'],
+  },
+  password: {
+    type: String,
+    required: [true, 'Password required'],
+    minLength: [6, 'Password should have at least 6 characters'],
+  },
+  confirmPassword: {
+    type: String,
+    required: true,
+    validate: [matches, 'The passwords do not match'],
+  },
+  hashedPassword: {
+    type: String,
+  },
 })
 
-//hash password before saving
-// userSchema.pre('save', async function (next) {
-//   if (this.isModified('hashedPassword')) {
-//     try {
-//       this.hashedPassword = await hashPassword(this.password)
-//     } catch (err) {
-//       return next(err)
-//     }
-//   }
-//   next()
-// })
+userSchema.methods.toJSON = function () {
+  var obj = this.toObject()
+  delete obj.hashedPassword
+  return obj
+}
+
+function matches() {
+  const { password, confirmPassword } = this
+  return password === confirmPassword
+}
+
+userSchema.post('validate', async function (doc) {
+  //hash password
+  this.hashedPassword = await hashPassword(this.password)
+
+  //remove plain password before saving
+  doc.password = undefined
+  doc.confirmPassword = undefined
+})
 
 const User = mongoose.model('User', userSchema)
 module.exports = User

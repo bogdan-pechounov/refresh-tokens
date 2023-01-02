@@ -16,7 +16,7 @@ module.exports = () => {
     },
     async clear() {
       const collections = Object.values(mongoose.connection.collections)
-      for (const collection in collections) {
+      for (const collection of collections) {
         collection.deleteMany()
       }
     },

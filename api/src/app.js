@@ -1,4 +1,5 @@
 const express = require('express')
+require('express-async-errors')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const logger = require('./utils/logger')
@@ -7,6 +8,7 @@ const fileLogger = require('./utils/fileLogger')
 const morgan = require('morgan')
 const config = require('./config')
 const { ORIGIN, LOG_ENABLED } = require('./config')
+const errorHandler = require('./middlewares/errorHandler')
 
 const app = express()
 
@@ -29,6 +31,7 @@ app.use(
   cors({
     credentials: true,
     origin: ORIGIN,
+    exposedHeaders: 'X-Access-Token',
   })
 ) //cors with credentials
 app.use(cookieParser()) //cookies for jwt tokens
@@ -40,5 +43,8 @@ app.get('/', (_, res) => {
 
 //Routes
 app.use('/auth', require('./routes/auth'))
+
+//Error handling
+app.use(errorHandler)
 
 module.exports = app

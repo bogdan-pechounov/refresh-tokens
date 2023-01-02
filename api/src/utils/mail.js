@@ -10,13 +10,14 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-async function sendMail(to, text) {
+async function sendMail({ to, subject, text, html }) {
   try {
     let info = await transporter.sendMail({
       to,
       replyTo: 'noreply.bogdan.pechounov@gmail.com',
-      subject: 'Signup succeeded',
+      subject,
       text,
+      html,
     })
     logger.info(info)
   } catch (err) {

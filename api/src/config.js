@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 //provide defaults to missing env variables
 const config = {
-  PORT: 5000,
+  PORT: 3001,
   ORIGIN: 'http://localhost:3000',
   DB_URI: 'mongodb://127.0.0.1:27017/forums',
   ACCESS_TOKEN_SECRET: 'secret',

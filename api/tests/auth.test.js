@@ -1,14 +1,17 @@
 const request = require('supertest')
 const app = require('../src/app.js')
+const { hashPassword } = require('../src/controllers/authController.js')
 const sendMail = require('../src/utils/mail.js')
 const db = require('./db.js')()
+const { CookieAccessInfo } = require('cookiejar')
 
 //in memory database
 beforeAll(async () => await db.connect())
 afterEach(async () => await db.clear())
 afterAll(async () => await db.disconnect())
 
-sendMail = jest.fn() //avoid sending emails during tests
+jest.mock('../src/utils/mail.js') //avoid sending emails during tests
+// jest.mock('../src/controllers/authController.js')
 
 describe('signup', () => {
   it('fails validation with status code 400', async () => {
@@ -37,18 +40,40 @@ describe('signup', () => {
       .send({ name: 'User', email: 'test.com', password: 'password' })
       .set('Accept', 'application/json')
       .expect(400)
+
+    await request(app)
+      .post('/auth/signup')
+      .send({
+        name: 'User',
+        email: 'test.com',
+        password: 'password',
+        confirmPassword: 'sladdfasj',
+      })
+      .set('Accept', 'application/json')
+      .expect(400)
   })
 
   it('succeeds with status code 201', async () => {
     await request(app)
       .post('/auth/signup')
-      .send({ name: 'User', password: 'password' })
+      .send({ name: 'User', password: 'password', confirmPassword: 'password' })
       .set('Accept', 'application/json')
       .expect(201)
 
     await request(app)
       .post('/auth/signup')
-      .send({ name: 'User 2', email: 'test@test.com', password: 'password' })
+      .send({ name: 'User', password: 'password', confirmPassword: 'password' })
+      .set('Accept', 'application/json')
+      .expect(400)
+
+    await request(app)
+      .post('/auth/signup')
+      .send({
+        name: 'User 2',
+        email: 'test@test.com',
+        password: 'password',
+        confirmPassword: 'password',
+      })
       .set('Accept', 'application/json')
       .expect(201)
   })
@@ -58,13 +83,102 @@ describe('signup', () => {
     await agent.get('/auth').expect(401)
     const response = await agent
       .post('/auth/signup')
-      .send({ name: 'User', password: 'password' })
+      .send({ name: 'User', password: 'password', confirmPassword: 'password' })
     expect(
       response.headers['set-cookie'].find((header) =>
         header.includes('refreshToken')
       )
     ).toBeTruthy()
 
-    await agent.get('/auth').expect(202)
+    await agent.get('/auth').expect(200)
+  })
+
+  it('sends an email', async () => {
+    await request(app).post('/auth/signup').send({
+      name: 'User',
+      email: 'test@test.com',
+      password: 'password',
+      confirmPassword: 'password',
+    })
+    expect(sendMail).toHaveBeenCalled()
+  })
+
+  it('sets an accessToken header', async () => {
+    const response = await request(app).post('/auth/signup').send({
+      name: 'User',
+      email: 'test@test.com',
+      password: 'password',
+      confirmPassword: 'password',
+    })
+    const accessToken = response.headers['access-token']
+    expect(accessToken).toBeDefined()
+
+    await request(app).get('/auth').expect(401)
+    await request(app)
+      .get('/auth')
+      .set({ 'access-token': accessToken })
+      .expect(200)
+    await request(app)
+      .get('/auth')
+      .set({ 'access-token': 'invalid' })
+      .expect(401)
+  })
+
+  it('resets tokens', async () => {
+    //sign up
+    const agent = request.agent(app)
+    let response = await agent.post('/auth/signup').send({
+      name: 'User',
+      email: 'test@test.com',
+      password: 'password',
+      confirmPassword: 'password',
+    })
+
+    const prevAccessToken = response.headers['access-token']
+    const prevRefreshToken = agent.jar.getCookie(
+      'refreshToken',
+      CookieAccessInfo()
+    ).value
+
+    //use access token
+    response = await agent
+      .get('/auth')
+      .set({ 'access-token': prevAccessToken })
+      .expect(200)
+
+    let accessToken = response.headers['access-token']
+    let refreshToken = agent.jar.getCookie(
+      'refreshToken',
+      CookieAccessInfo()
+    ).value
+
+    expect(accessToken).toBeUndefined()
+    expect(refreshToken).toEqual(prevRefreshToken)
+
+    //don't use access token to trigger a token reset
+    response = await agent.get('/auth').expect(200)
+
+    accessToken = response.headers['access-token']
+    refreshToken = agent.jar.getCookie('refreshToken', CookieAccessInfo()).value
+
+    expect(accessToken).toBeDefined()
+    expect(accessToken).not.toEqual(prevAccessToken)
+    expect(refreshToken).not.toEqual(prevRefreshToken)
+  })
+
+  it('rotates token', async () => {
+    const agent = request.agent(app)
+    let response = await agent.post('/auth/signup').send({
+      name: 'User',
+      email: 'test@test.com',
+      password: 'password',
+      confirmPassword: 'password',
+    })
+    let accessToken = response.headers['access-token']
+    console.log(accessToken)
+    response = await agent.get('/auth').set({ 'access-token': accessToken })
+
+    accessToken = response.headers['access-token']
+    console.log(accessToken)
   })
 })
