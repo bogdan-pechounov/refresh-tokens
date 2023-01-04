@@ -1,25 +1,51 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import isEmail from 'validator/lib/isEmail'
 import { AppContext } from '../../App'
 import api from '../../utils/api'
+import { ToastContext } from '../toast/Toast'
 
 function LoginModal() {
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+
   const { setUser } = useContext(AppContext)
 
   const closeButton = useRef()
 
-  async function handleSubmit(e) {
+  function close() {
+    closeButton.current.click()
+  }
+
+  async function handleSubmit() {
     const user = isEmail(name) ? { email: name, password } : { name, password }
     try {
       setUser(await api.login(user))
-      closeButton.current.click()
+      close()
     } catch (err) {
       setErrorMessage(err.response.data)
     }
+  }
+
+  //reset password
+  const [confirmEmail, setConfirmEmail] = useState('')
+  const { show, setTitle, setMsg } = useContext(ToastContext)
+
+  useEffect(() => {
+    //reuse email instead of retyping it
+    if (isEmail(name)) {
+      setConfirmEmail(name)
+    }
+  }, [name])
+
+  async function handleResetPassword(e) {
+    e.preventDefault()
+    await api.requestNewPassword(confirmEmail)
+    close()
+    show()
+    setTitle('Reset password')
+    setMsg('An email has been sent')
   }
 
   return ReactDOM.createPortal(
@@ -44,6 +70,7 @@ function LoginModal() {
             ></button>
           </div>
           <div className='modal-body'>
+            {/* Form */}
             <form>
               <div className='mb-3'>
                 <label htmlFor='exampleInputEmail1' className='form-label'>
@@ -71,8 +98,42 @@ function LoginModal() {
                 />
               </div>
             </form>
+            {/* Reset password */}
+            <p>
+              <a
+                className='link-primary'
+                data-bs-toggle='collapse'
+                href='#collapseExample'
+                role='button'
+                aria-expanded='false'
+                aria-controls='collapseExample'
+              >
+                Forgot your password?
+              </a>
+            </p>
+            <div className='collapse' id='collapseExample'>
+              <div className='card card-body'>
+                <form className='row' onSubmit={handleResetPassword}>
+                  <div className='col'>
+                    <input
+                      type='email'
+                      className='form-control'
+                      placeholder='reset@password.com'
+                      value={confirmEmail}
+                      onChange={(e) => setConfirmEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className='col-auto'>
+                    <button type='submit' className='btn btn-primary'>
+                      Send email
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {/* Errors */}
             {errorMessage && (
-              <div className='alert alert-danger' role='alert'>
+              <div className='alert alert-danger mb-0' role='alert'>
                 {errorMessage}
               </div>
             )}
@@ -86,6 +147,7 @@ function LoginModal() {
             >
               Close
             </button>
+            {/* Submit */}
             <button
               type='button'
               className='btn btn-primary'

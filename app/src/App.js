@@ -6,6 +6,8 @@ import Home from './pages/home/Home'
 import ErrorPage from './pages/404/ErrorPage'
 import { createContext, useEffect, useState } from 'react'
 import api from './utils/api'
+import ResetPassword from './pages/reset/ResetPassword'
+import { ToastProvider } from './components/toast/Toast'
 
 export const AppContext = createContext()
 
@@ -21,14 +23,17 @@ function App() {
 
   return (
     <AppContext.Provider value={{ user, setUser }}>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='*' element={<ErrorPage />} />
-        </Routes>
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/reset-password/:token' element={<ResetPassword />} />
+            <Route path='*' element={<ErrorPage />} />
+          </Routes>
+        </BrowserRouter>
+      </ToastProvider>
     </AppContext.Provider>
   )
 }

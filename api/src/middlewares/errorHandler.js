@@ -6,9 +6,9 @@ function errorHandler(err, req, res, next) {
     let field = Object.keys(err.keyValue)[0]
     const mapping = { name: 'Username', email: 'Email' }
     const msg = { [field]: `${mapping[field] || field} already taken.` }
-    res.status(400).send(msg)
+    res.status(409).send(msg)
   }
-  //mongoose validation
+  //mongoose validation + custom validation
   else if (err.name === 'ValidationError') {
     const msg = {}
     for (const [key, value] of Object.entries(err.errors)) {

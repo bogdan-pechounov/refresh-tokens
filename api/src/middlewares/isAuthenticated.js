@@ -15,19 +15,31 @@ module.exports = async (req, res, next) => {
   const accessToken = getAccessToken(req)
   const refreshToken = getRefreshToken(req)
 
-  console.log('TEST', accessToken)
-  console.log('TEST2', refreshToken)
-
   async function resetTokens() {
-    //todo detect refresh token reuse
     try {
       const { id } = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET)
-      console.log(jwt.verify(refreshToken, REFRESH_TOKEN_SECRET))
       const user = await User.findById(id)
-      setAccessToken(res, createAccessToken(id))
-      setRefreshToken(res, createRefreshToken(id))
-      req.userId = id
-      next()
+      //detect refresh token reuse
+      if (!user.refreshTokens.includes(refreshToken)) {
+        //delete all refresh tokens
+        user.refreshTokens = []
+        await user.save()
+        res.status(401).send('Refresh token reuse')
+      } else {
+        const newRefreshToken = createRefreshToken(id)
+        //remove old refresh token
+        user.refreshTokens = user.refreshTokens.filter(
+          (token) => token !== refreshToken
+        )
+        //add new refresh token
+        user.refreshTokens.push(newRefreshToken)
+        await user.save()
+        //set headers
+        setAccessToken(res, createAccessToken(id))
+        setRefreshToken(res, newRefreshToken)
+        req.userId = id
+        next()
+      }
     } catch (err) {
       logger.error(err)
       res.status(401).send('Invalid credentials')
@@ -43,7 +55,7 @@ module.exports = async (req, res, next) => {
     } catch (err) {
       //if expired, check refreshToken
       if (err.name === 'TokenExpiredError' && refreshToken) {
-        await resetTokens(res, refreshToken)
+        resetTokens(res, refreshToken)
       } else {
         logger.error(err)
         res.status(401).send('Invalid credentials')

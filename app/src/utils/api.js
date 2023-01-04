@@ -32,6 +32,14 @@ class Api {
     axiosClient.defaults.headers['X-Access-Token'] = undefined
     return await axiosClient.get('/auth/logout')
   }
+
+  async requestNewPassword(email) {
+    return await axiosClient.post(`/auth/request-new-password/`, { email })
+  }
+
+  async resetPassword(j) {
+    return await axiosClient.post(`/auth/reset-password/`, j)
+  }
 }
 
 export default new Api()

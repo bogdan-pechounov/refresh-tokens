@@ -4,6 +4,8 @@ const { hashPassword } = require('../src/controllers/authController.js')
 const sendMail = require('../src/utils/mail.js')
 const db = require('./db.js')()
 const { CookieAccessInfo } = require('cookiejar')
+const User = require('../src/models/user.js')
+const supertest = require('supertest')
 
 //in memory database
 beforeAll(async () => await db.connect())
@@ -166,7 +168,7 @@ describe('signup', () => {
     expect(refreshToken).not.toEqual(prevRefreshToken)
   })
 
-  it('rotates token', async () => {
+  it('deletes token on logout', async () => {
     const agent = request.agent(app)
     let response = await agent.post('/auth/signup').send({
       name: 'User',
@@ -174,11 +176,28 @@ describe('signup', () => {
       password: 'password',
       confirmPassword: 'password',
     })
-    let accessToken = response.headers['access-token']
-    console.log(accessToken)
-    response = await agent.get('/auth').set({ 'access-token': accessToken })
+    let user = await User.findById(response.body._id)
+    expect(user.refreshTokens.length).toBe(1)
+    await agent.get('/auth/logout')
+    user = await User.findById(response.body._id)
+    expect(user.refreshTokens.length).toBe(0)
+  })
 
-    accessToken = response.headers['access-token']
-    console.log(accessToken)
+  it('detects refresh token reuse', async () => {
+    const agent = request.agent(app)
+    let response = await agent.post('/auth/signup').send({
+      name: 'User',
+      email: 'test@test.com',
+      password: 'password',
+      confirmPassword: 'password',
+    })
+    const cookie = response.headers['set-cookie']
+    await agent.get('/auth/logout')
+
+    //compromised cookie
+    response = await supertest(app)
+      .get('/auth/me')
+      .set('Cookie', cookie)
+      .expect(401)
   })
 })

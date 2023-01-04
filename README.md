@@ -8,6 +8,8 @@ while deepening my understanding of refresh tokens and csrf attacks.
 # References
 [Demystifying CORS, CSRF tokens, SameSite & Clickjacking - Web Security](https://michaelzanggl.com/articles/web-security-cors-csrf-samesite/)
 
+[Refresh Token Rotation and Reuse Detection in Node.js JWT Authentication](https://www.youtube.com/watch?v=s-4k5TcGKHg)
+
 [React Testing Tutorial](https://www.youtube.com/playlist?list=PLC3y8-rFHvwirqe1KHFCHJ0RqNuN61SJd)
 
 [React Formik Tutorial](https://www.youtube.com/playlist?list=PLC3y8-rFHvwiPmFbtzEWjESkqBVDbdgGu)

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
 const { isEmail } = require('validator')
+const password = require('../utils/password')
 const { hashPassword } = require('../utils/password')
 
 //todo profile picture
 //todo oauth
-const userSchema = mongoose.Schema({
+const UserSchema = mongoose.Schema({
   name: {
     type: String,
     unique: true,
@@ -15,42 +16,53 @@ const userSchema = mongoose.Schema({
     type: String,
     unique: true,
     sparse: true, //ignore documents without the email field when determining uniqueness
-    validate: [isEmail, 'Please enter a valid email.'],
+    validate: [isEmail, 'Please enter a valid email'],
   },
-  password: {
-    type: String,
-    required: [true, 'Password required'],
-    minLength: [6, 'Password should have at least 6 characters'],
-  },
-  confirmPassword: {
-    type: String,
-    required: true,
-    validate: [matches, 'The passwords do not match'],
-  },
-  hashedPassword: {
-    type: String,
+  password: String,
+  confirmPassword: String,
+  hashedPassword: String,
+  refreshTokens: [String],
+  resetPassword: {
+    token: String,
+    expiration: Date,
   },
 })
 
-userSchema.methods.toJSON = function () {
-  var obj = this.toObject()
-  delete obj.hashedPassword
-  return obj
-}
-
-function matches() {
+//validate passwords (use a required field)
+UserSchema.path('name').validate(function (v) {
   const { password, confirmPassword } = this
-  return password === confirmPassword
-}
 
-userSchema.post('validate', async function (doc) {
+  if (password || confirmPassword) {
+    if (password?.length < 6) {
+      this.invalidate('password', 'Password should have at least 6 characters')
+    }
+    if (password !== confirmPassword) {
+      this.invalidate('confirmPassword', 'Passwords do not match')
+    }
+  }
+
+  if ((this.isNew && !password) || password === '') {
+    this.invalidate('password', 'Password required')
+  }
+}, null)
+
+UserSchema.post('validate', async function (doc) {
   //hash password
-  this.hashedPassword = await hashPassword(this.password)
+  if (this.password) this.hashedPassword = await hashPassword(this.password)
 
   //remove plain password before saving
   doc.password = undefined
   doc.confirmPassword = undefined
 })
 
-const User = mongoose.model('User', userSchema)
+//remove fields before sending response
+UserSchema.methods.toJSON = function () {
+  var obj = this.toObject()
+  delete obj.hashedPassword
+  delete obj.refreshTokens
+  delete obj.resetPassword
+  return obj
+}
+
+const User = mongoose.model('User', UserSchema)
 module.exports = User

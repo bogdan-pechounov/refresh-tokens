@@ -26,7 +26,6 @@ function UserLinks() {
   if (user) {
     return (
       <>
-        <p>{user.name}</p>
         <NavItem title='Logout' onClick={logout} />
       </>
     )

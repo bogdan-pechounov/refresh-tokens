@@ -2,13 +2,19 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../config')
 const jwt = require('jsonwebtoken')
 
 const access_token_expires_in = '15m'
-const refresh_token_expires_in = '7d'
+// const refresh_token_expires_in = '7d'
+// const cookie_options = {
+//   //todo
+//   httpOnly: true,
+//   maxAge: 7 * 24 * 60 * 60 * 1000,
+// }
+
+const refresh_token_expires_in = '10s'
 const cookie_options = {
   //todo
   httpOnly: true,
-  maxAge: 7 * 24 * 60 * 60 * 1000,
+  maxAge: 10 * 1000,
 }
-
 module.exports = {
   createAccessToken(id) {
     return jwt.sign(
