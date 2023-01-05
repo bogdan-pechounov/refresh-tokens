@@ -8,8 +8,8 @@ import { customRender } from '../../tests/test-utils'
 describe('Sign up', () => {
   test('renders correctly', () => {
     customRender(<SignUp />)
-    expect(screen.getByLabelText('Confirm Password')).toBeDefined()
-    expect(screen.getByPlaceholderText('Username')).toBeDefined()
+    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Username')).toBeInTheDocument()
   })
 
   test('requires username', async () => {

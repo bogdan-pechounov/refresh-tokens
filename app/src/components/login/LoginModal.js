@@ -66,42 +66,42 @@ export function Login() {
   }
 
   return (
-    <div className='modal-content'>
-      <div className='modal-header'>
-        <h1 className='modal-title fs-5' id='exampleModalLabel'>
+    <div className="modal-content">
+      <div className="modal-header">
+        <h1 className="modal-title fs-5" id="exampleModalLabel">
           Login
         </h1>
         <button
-          type='button'
-          className='btn-close'
-          data-bs-dismiss='modal'
-          aria-label='Close'
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
         ></button>
       </div>
-      <div className='modal-body'>
+      <div className="modal-body">
         {/* Form */}
         <form>
-          <div className='mb-3'>
-            <label htmlFor='exampleInputEmail1' className='form-label'>
+          <div className="mb-3">
+            <label htmlFor="exampleInputEmail1" className="form-label">
               Username or email
             </label>
             <input
-              type='email'
-              className='form-control'
-              id='exampleInputEmail1'
-              aria-describedby='emailHelp'
+              type="email"
+              className="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className='mb-3'>
-            <label htmlFor='exampleInputPassword1' className='form-label'>
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">
               Password
             </label>
             <input
-              type='password'
-              className='form-control'
-              id='exampleInputPassword1'
+              type="password"
+              className="form-control"
+              id="exampleInputPassword1"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -110,30 +110,30 @@ export function Login() {
         {/* Reset password */}
         <p>
           <a
-            className='link-primary'
-            data-bs-toggle='collapse'
-            href='#collapseExample'
-            role='button'
-            aria-expanded='false'
-            aria-controls='collapseExample'
+            className="link-primary"
+            data-bs-toggle="collapse"
+            href="#collapseExample"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseExample"
           >
             Forgot your password?
           </a>
         </p>
-        <div className='collapse' id='collapseExample'>
-          <div className='card card-body'>
-            <form className='row' onSubmit={handleResetPassword}>
-              <div className='col'>
+        <div className="collapse" id="collapseExample">
+          <div className="card card-body">
+            <form className="row" onSubmit={handleResetPassword}>
+              <div className="col">
                 <input
-                  type='email'
-                  className='form-control'
-                  placeholder='reset@password.com'
+                  type="email"
+                  className="form-control"
+                  placeholder="reset@password.com"
                   value={confirmEmail}
                   onChange={(e) => setConfirmEmail(e.target.value)}
                 />
               </div>
-              <div className='col-auto'>
-                <button type='submit' className='btn btn-primary'>
+              <div className="col-auto">
+                <button type="submit" className="btn btn-primary">
                   Send email
                 </button>
               </div>
@@ -142,24 +142,24 @@ export function Login() {
         </div>
         {/* Errors */}
         {errorMessage && (
-          <div className='alert alert-danger mb-0' role='alert'>
+          <div className="alert alert-danger mb-0" role="alert">
             {errorMessage}
           </div>
         )}
       </div>
-      <div className='modal-footer'>
+      <div className="modal-footer">
         <button
-          type='button'
-          className='btn btn-secondary'
-          data-bs-dismiss='modal'
+          type="button"
+          className="btn btn-secondary"
+          data-bs-dismiss="modal"
           ref={closeButton}
         >
           Close
         </button>
         {/* Submit */}
         <button
-          type='button'
-          className='btn btn-primary'
+          type="button"
+          className="btn btn-primary"
           onClick={handleSubmit}
         >
           Login
@@ -171,13 +171,13 @@ export function Login() {
 function LoginModal() {
   return ReactDOM.createPortal(
     <div
-      className='modal fade'
-      id='loginModal'
-      tabIndex='-1'
-      aria-labelledby='exampleModalLabel'
-      aria-hidden='true'
+      className="modal fade"
+      id="loginModal"
+      tabIndex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
     >
-      <div className='modal-dialog'>
+      <div className="modal-dialog">
         <Login />
       </div>
     </div>,

@@ -7,6 +7,7 @@ const {
   resetPassword,
   requestNewPassword,
 } = require('../controllers/authController')
+const { google } = require('../controllers/oauthController')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 
 const router = express.Router()
@@ -22,5 +23,7 @@ router.post('/login', login)
 router.post('/request-new-password', requestNewPassword)
 
 router.post('/reset-password/', resetPassword)
+
+router.get('/google', google)
 
 module.exports = router

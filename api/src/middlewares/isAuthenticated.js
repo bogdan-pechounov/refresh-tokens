@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken')
-const { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } = require('../config')
+const {
+  REFRESH_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET,
+} = require('../config/config')
 const User = require('../models/user')
 const logger = require('../utils/logger')
 const {

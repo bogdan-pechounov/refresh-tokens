@@ -41,6 +41,10 @@ class Api {
   async resetPassword(j) {
     return await axiosClient.post(`/auth/reset-password/`, j)
   }
+
+  async google() {
+    return await axiosClient.get('/auth/google')
+  }
 }
 
 export default new Api()

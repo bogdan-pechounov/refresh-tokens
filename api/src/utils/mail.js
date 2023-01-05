@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-const { EMAIL_APP_PASSWORD } = require('../config')
+const { EMAIL_APP_PASSWORD } = require('../config/config')
 const logger = require('./logger')
 
 const transporter = nodemailer.createTransport({

@@ -10,7 +10,7 @@ const {
 const sendMail = require('../utils/mail')
 const logger = require('../utils/logger')
 const { matchPassword } = require('../utils/password')
-const { REFRESH_TOKEN_SECRET, ORIGIN } = require('../config')
+const { REFRESH_TOKEN_SECRET, ORIGIN } = require('../config/config')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 
@@ -100,6 +100,7 @@ exports.requestNewPassword = async (req, res) => {
   if (!user) {
     return res.status(400).send('No account with that email found')
   }
+  //generate random string
   crypto.randomBytes(32, async (err, buffer) => {
     if (err) throw err
     const token = buffer.toString('hex')
@@ -120,6 +121,7 @@ exports.requestNewPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
   const { token, password = '', confirmPassword } = req.body
+  //find token that hasn't expired
   const user = await User.findOne({
     'resetPassword.token': token,
     'resetPassword.expiration': { $gt: Date.now() },

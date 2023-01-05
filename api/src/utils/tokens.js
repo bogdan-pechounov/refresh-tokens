@@ -1,4 +1,7 @@
-const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../config')
+const {
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_SECRET,
+} = require('../config/config')
 const jwt = require('jsonwebtoken')
 
 const access_token_expires_in = '15m'

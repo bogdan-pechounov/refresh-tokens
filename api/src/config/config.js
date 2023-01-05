@@ -11,6 +11,8 @@ const config = {
   ACCESS_TOKEN_SECRET: 'secret',
   REFRESH_TOKEN_SECRET: 'secret',
   EMAIL_APP_PASSWORD: undefined,
+  GOOGLE_CLIENT_ID: undefined,
+  GOOGLE_CLIENT_SECRET: undefined,
 }
 
 //use env variable if defined and check if missing in production

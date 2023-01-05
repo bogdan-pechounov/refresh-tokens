@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const app = require('./app')
-const { PORT, DB_URI } = require('./config')
+const { PORT, DB_URI } = require('./config/config')
 const logger = require('./utils/logger')
 
 //Listen

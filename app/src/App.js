@@ -27,10 +27,10 @@ function App() {
         <BrowserRouter>
           <Navbar />
           <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/signup' element={<SignUp />} />
-            <Route path='/reset-password/:token' element={<ResetPassword />} />
-            <Route path='*' element={<ErrorPage />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>
       </ToastProvider>

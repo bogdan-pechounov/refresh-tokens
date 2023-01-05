@@ -1,0 +1,23 @@
+{
+  "name": "refresh-tokens",
+  "version": "1.0.0",
+  "description": "The goal of this project is to practice using the following tools and packages:\r - jest, supertest, react testing, continuous integration\r - mongoose validation, oauth, nodemailer, passport\r - bootstrap, formik",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bogdan-pechounov/refresh-tokens.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bogdan-pechounov/refresh-tokens/issues"
+  },
+  "homepage": "https://github.com/bogdan-pechounov/refresh-tokens#readme",
+  "devDependencies": {
+    "husky": "^8.0.0"
+  }
+}

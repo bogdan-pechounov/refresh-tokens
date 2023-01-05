@@ -20,11 +20,11 @@ describe('Login Modal', () => {
       </AppContext.Provider>,
       {}
     )
-    expect(screen.getByText('Username or email')).toBeDefined()
+    expect(screen.getByText('Username or email')).toBeInTheDocument()
     expect(
       screen.getByRole('button', { hidden: true, name: 'Login' })
-    ).toBeDefined()
-    expect(screen.getByLabelText('Password')).toBeDefined()
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
   })
 
   test('displays error message', async () => {
