@@ -8,5 +8,5 @@ matchMediaPolyfill(window)
 test('renders', async () => {
   render(<App />)
   await screen.findByRole('link', { name: /logout/i })
-  expect(screen.getByText('Home')).toBeDefined()
+  expect(screen.getByText('Home')).toBeInTheDocument()
 })

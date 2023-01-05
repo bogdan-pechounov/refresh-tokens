@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/bogdan-pechounov/refresh-tokens#readme",
   "devDependencies": {
-    "husky": "^8.0.0"
+    "husky": "^8.0.3"
   }
 }
