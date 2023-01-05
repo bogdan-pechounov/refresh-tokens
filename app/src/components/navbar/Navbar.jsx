@@ -33,15 +33,17 @@ function UserLinks() {
 
   return (
     <>
-      <button
-        type='button'
-        className='btn btn-primary'
-        data-bs-toggle='modal'
-        data-bs-target='#loginModal'
-      >
-        Login
-      </button>
-      <LoginModal />
+      <li>
+        <button
+          type='button'
+          className='btn btn-primary'
+          data-bs-toggle='modal'
+          data-bs-target='#loginModal'
+        >
+          Login
+        </button>
+        <LoginModal />
+      </li>
       <NavItem to={'/signup'} title='Signup' />
     </>
   )

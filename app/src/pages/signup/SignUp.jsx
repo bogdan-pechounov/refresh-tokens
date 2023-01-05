@@ -6,6 +6,7 @@ import { AppContext } from '../../App'
 import PasswordStrength from '../../components/password-strength/PasswordStrength'
 import api from '../../utils/api'
 
+//formik
 const initialValues = {
   name: '',
   email: '',
@@ -47,6 +48,7 @@ function SignUp() {
     }
   }
 
+  //focus next field when enter is pressed
   function handleEnter(event) {
     if (event.keyCode === 13) {
       const form = event.target.form
@@ -65,6 +67,7 @@ function SignUp() {
     >
       {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
         <Form className='container mt-2'>
+          {/* Username */}
           <div className='mb-3'>
             <label htmlFor='name' className='form-label'>
               Username
@@ -79,7 +82,7 @@ function SignUp() {
             />
             <ErrorMessage name='name' component='div' className='error' />
           </div>
-
+          {/* Email */}
           <div className='mb-3'>
             <label htmlFor='email' className='form-label'>
               Email address
@@ -98,7 +101,7 @@ function SignUp() {
             </div>
             <ErrorMessage name='email' component='div' className='error' />
           </div>
-
+          {/* Password */}
           <div className='mb-3'>
             <label htmlFor='password' className='form-label'>
               Password
@@ -126,9 +129,9 @@ function SignUp() {
             <PasswordStrength password={values.password} />
             <ErrorMessage name='password' component='div' className='error' />
           </div>
-
+          {/* Confirm password */}
           <div className='mb-3'>
-            <label htmlFor='password' className='form-label'>
+            <label htmlFor='confirmPassword' className='form-label'>
               Confirm Password
             </label>
             <Field

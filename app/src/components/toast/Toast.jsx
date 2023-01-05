@@ -1,6 +1,7 @@
 import React, { createContext, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Toast as BToast } from 'bootstrap'
+import { getRoot } from '../../utils/utils'
 
 export const ToastContext = createContext()
 
@@ -28,7 +29,7 @@ function Toast({ toastRef, title, msg }) {
         <div className='toast-body'>{msg}</div>
       </div>
     </div>,
-    document.getElementById('toast-root')
+    getRoot('toast-root')
   )
 }
 

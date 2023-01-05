@@ -1,8 +1,9 @@
 import axios from 'axios'
 
-const baseURL = 'http://localhost:3001'
+export const BASE_URL = 'http://localhost:3001'
+
 const axiosClient = axios.create({
-  baseURL,
+  baseURL: BASE_URL,
   withCredentials: true,
 })
 

@@ -1,8 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import matchMediaPolyfill from 'mq-polyfill'
+import { render, screen } from '@testing-library/react'
+import App from './App'
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+//matchMedia for dark mode is undefined
+matchMediaPolyfill(window)
+
+test('renders', async () => {
+  render(<App />)
+  await screen.findByRole('link', { name: /logout/i })
+  expect(screen.getByText('Home')).toBeDefined()
+})
