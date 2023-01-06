@@ -142,4 +142,5 @@ exports.oauthCallback = (req, res) => {
   addRefreshToken(id, refreshToken)
   setRefreshToken(res, refreshToken)
   res.redirect(ORIGIN + '/close')
+  // res.redirect(ORIGIN)
 }

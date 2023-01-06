@@ -7,15 +7,23 @@ const axiosClient = axios.create({
   withCredentials: true,
 })
 
-let accessToken
-
-axiosClient.interceptors.response.use((response) => {
-  const { data, headers } = response
-  //store access token in memory
-  accessToken = headers['x-access-token']
-  if (accessToken) axiosClient.defaults.headers['X-Access-Token'] = accessToken
-  return data
-})
+axiosClient.interceptors.response.use(
+  (response) => {
+    const { data, headers } = response
+    //store access token in memory
+    const accessToken = headers['x-access-token']
+    const csrfToken = headers['x-csrf-token']
+    if (accessToken)
+      axiosClient.defaults.headers['X-Access-Token'] = accessToken
+    if (csrfToken) axiosClient.defaults.headers['X-CSRF-Token'] = csrfToken
+    return data
+  },
+  (error) => {
+    const csrfToken = error.response.headers['x-csrf-token']
+    if (csrfToken) axiosClient.defaults.headers['X-CSRF-Token'] = csrfToken
+    throw error
+  }
+)
 
 class Api {
   async me() {
@@ -42,22 +50,21 @@ class Api {
     return await axiosClient.post(`/auth/reset-password/`, j)
   }
 
-  google() {
+  open(path, name) {
     const width = 660
     const height = 660
     const left = window.screen.width / 2 - width / 2
     const top = window.screen.height / 2 - height / 2
     let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${width},height=${height},left=${left},top=${top}`
-    window.open(BASE_URL + '/auth/google', 'google', params)
+    window.open(BASE_URL + path, name, params)
+    // window.open(BASE_URL + path, '_self')
+  }
+  google() {
+    this.open('/auth/google', 'google')
   }
 
   github() {
-    const width = 660
-    const height = 660
-    const left = window.screen.width / 2 - width / 2
-    const top = window.screen.height / 2 - height / 2
-    let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${width},height=${height},left=${left},top=${top}`
-    window.open(BASE_URL + '/auth/github', 'github', params)
+    this.open('/auth/github', 'github')
   }
 }
 

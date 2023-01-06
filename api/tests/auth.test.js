@@ -1,11 +1,9 @@
 const request = require('supertest')
 const app = require('../src/app.js')
-const { hashPassword } = require('../src/controllers/authController.js')
 const sendMail = require('../src/utils/mail.js')
 const db = require('./db.js')()
 const { CookieAccessInfo } = require('cookiejar')
 const User = require('../src/models/user.js')
-const supertest = require('supertest')
 
 //in memory database
 beforeAll(async () => await db.connect())
@@ -13,37 +11,57 @@ afterEach(async () => await db.clear())
 afterAll(async () => await db.disconnect())
 
 jest.mock('../src/utils/mail.js') //avoid sending emails during tests
-// jest.mock('../src/controllers/authController.js')
+
+//set csrf token header
+async function createAgent() {
+  const agent = request.agent(app)
+  const response = await agent.get('/')
+  const csrfToken = response.headers['x-csrf-token']
+  agent.set('X-CSRF-Token', csrfToken)
+  return agent
+}
 
 describe('signup', () => {
+  it('sets csrf token', async () => {
+    const agent = request.agent(app)
+    const response = await agent.get('/')
+    const csrfToken = response.headers['x-csrf-token']
+    expect(csrfToken).toBeDefined()
+  })
+
   it('fails validation with status code 400', async () => {
-    await request(app)
+    const agent = request.agent(app)
+    const response = await agent.get('/')
+    const csrfToken = response.headers['x-csrf-token']
+    agent.set('X-CSRF-Token', csrfToken)
+
+    await agent
       .post('/auth/signup')
       .send({ name: 'User', email: 'test@test.com' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
 
-    await request(app)
+    await agent
       .post('/auth/signup')
       .send({ email: 'test@test.com' })
       .set('Accept', 'application/json')
       .expect(400)
 
-    await request(app)
+    await agent
       .post('/auth/signup')
       .send({ name: 'User', password: 'pass' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
 
-    await request(app)
+    await agent
       .post('/auth/signup')
       .send({ name: 'User', email: 'test.com', password: 'password' })
       .set('Accept', 'application/json')
       .expect(400)
 
-    await request(app)
+    await agent
       .post('/auth/signup')
       .send({
         name: 'User',
@@ -56,19 +74,24 @@ describe('signup', () => {
   })
 
   it('succeeds with status code 201', async () => {
-    await request(app)
+    const agent = request.agent(app)
+    const response = await agent.get('/')
+    const csrfToken = response.headers['x-csrf-token']
+    agent.set('X-CSRF-Token', csrfToken)
+
+    await agent
       .post('/auth/signup')
       .send({ name: 'User', password: 'password', confirmPassword: 'password' })
       .set('Accept', 'application/json')
       .expect(201)
 
-    await request(app)
+    await agent
       .post('/auth/signup')
       .send({ name: 'User', password: 'password', confirmPassword: 'password' })
       .set('Accept', 'application/json')
       .expect(409)
 
-    await request(app)
+    await agent
       .post('/auth/signup')
       .send({
         name: 'User 2',
@@ -82,7 +105,10 @@ describe('signup', () => {
 
   it('sends cookies', async () => {
     const agent = request.agent(app)
-    await agent.get('/auth/me').expect(401)
+    const { headers } = await agent.get('/auth/me').expect(401)
+    const csrfToken = headers['x-csrf-token']
+    agent.set('X-CSRF-Token', csrfToken)
+
     const response = await agent
       .post('/auth/signup')
       .send({ name: 'User', password: 'password', confirmPassword: 'password' })
@@ -96,7 +122,12 @@ describe('signup', () => {
   })
 
   it('sends an email', async () => {
-    await request(app).post('/auth/signup').send({
+    const agent = request.agent(app)
+    const response = await agent.get('/')
+    const csrfToken = response.headers['x-csrf-token']
+    agent.set('X-CSRF-Token', csrfToken)
+
+    await agent.post('/auth/signup').send({
       name: 'User',
       email: 'test@test.com',
       password: 'password',
@@ -106,7 +137,10 @@ describe('signup', () => {
   })
 
   it('sets an accessToken header', async () => {
-    const response = await request(app).post('/auth/signup').send({
+    const agent = await createAgent()
+    const agent2 = await createAgent()
+
+    const response = await agent.post('/auth/signup').send({
       name: 'User',
       email: 'test@test.com',
       password: 'password',
@@ -115,20 +149,17 @@ describe('signup', () => {
     const accessToken = response.headers['x-access-token']
     expect(accessToken).toBeDefined()
 
-    await request(app).get('/auth/me').expect(401)
-    await request(app)
+    await agent2.get('/auth/me').expect(401)
+    await agent
       .get('/auth/me')
       .set({ 'X-Access-Token': accessToken })
       .expect(200)
-    await request(app)
-      .get('/auth/me')
-      .set({ 'X-Access-Token': 'invalid' })
-      .expect(401)
+    await agent.get('/auth/me').set({ 'X-Access-Token': 'invalid' }).expect(401)
   })
 
   it('resets tokens', async () => {
     //sign up
-    const agent = request.agent(app)
+    const agent = await createAgent()
     let response = await agent.post('/auth/signup').send({
       name: 'User',
       email: 'test@test.com',
@@ -172,7 +203,7 @@ describe('signup', () => {
   })
 
   it('deletes token on logout', async () => {
-    const agent = request.agent(app)
+    const agent = await createAgent()
     let response = await agent.post('/auth/signup').send({
       name: 'User',
       email: 'test@test.com',
@@ -187,7 +218,7 @@ describe('signup', () => {
   })
 
   it('detects refresh token reuse', async () => {
-    const agent = request.agent(app)
+    const agent = await createAgent()
     let response = await agent.post('/auth/signup').send({
       name: 'User',
       email: 'test@test.com',
@@ -198,7 +229,7 @@ describe('signup', () => {
     await agent.get('/auth/logout')
 
     //compromised cookie
-    response = await supertest(app)
+    response = await request(app)
       .get('/auth/me')
       .set('Cookie', cookie)
       .expect(401)

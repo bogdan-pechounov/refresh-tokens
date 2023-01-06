@@ -1,5 +1,5 @@
 const express = require('express')
-require('express-async-errors')
+require('express-async-errors') //help catch erros in promises
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const logger = require('./utils/logger')
@@ -9,6 +9,8 @@ const morgan = require('morgan')
 const config = require('./config/config')
 const { ORIGIN, LOG_ENABLED } = require('./config/config')
 const errorHandler = require('./middlewares/errorHandler')
+const { default: helmet } = require('helmet')
+const { csrf } = require('./middlewares/csrfProtection')
 
 const app = express()
 
@@ -31,10 +33,12 @@ app.use(
   cors({
     credentials: true,
     origin: ORIGIN,
-    exposedHeaders: 'X-Access-Token',
+    exposedHeaders: ['X-Access-Token', 'X-CSRF-Token'],
   })
 ) //cors with credentials
 app.use(cookieParser()) //cookies for jwt tokens
+app.use(helmet({ crossOriginOpenerPolicy: { policy: 'unsafe-none' } })) //secure headers, unsage opener policy to be able to refresh the page that opened the oauth popup
+app.use(csrf) //protect against csrf attacks
 
 //sanity check
 app.get('/', (_, res) => {

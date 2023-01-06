@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken')
 const access_token_expires_in = '15m'
 const refresh_token_expires_in = '7d'
 const cookie_options = {
-  //todo
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   httpOnly: true,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 }
@@ -48,4 +49,5 @@ module.exports = {
     const { maxAge, ...options } = cookie_options
     res.clearCookie('refreshToken', options)
   },
+  cookie_options,
 }

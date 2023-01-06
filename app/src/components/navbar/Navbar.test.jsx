@@ -19,7 +19,7 @@ describe('Navbar', () => {
       </BrowserRouter>
     )
 
-    expect(screen.getByRole('navigation')).toBeDefined()
+    expect(screen.getByRole('navigation')).toBeInTheDocument()
 
     const listItems = screen.getAllByRole('listitem', { hidden: true })
     expect(listItems).toHaveLength(2)
@@ -39,10 +39,10 @@ describe('Navbar', () => {
       </BrowserRouter>
     )
 
-    expect(screen.getByRole('navigation')).toBeDefined()
+    expect(screen.getByRole('navigation')).toBeInTheDocument()
 
     const listItems = screen.getAllByRole('listitem')
-    expect(listItems).toHaveLength(1)
+    expect(listItems.length).toBe(1)
 
     const logout = screen.queryByRole('link', { name: 'Logout' })
     expect(logout).toBeInTheDocument()
