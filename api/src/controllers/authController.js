@@ -135,3 +135,11 @@ exports.resetPassword = async (req, res) => {
   await user.save()
   res.send('Password has been reset')
 }
+
+exports.oauthCallback = (req, res) => {
+  const id = req.user.id
+  const refreshToken = createRefreshToken(id)
+  addRefreshToken(id, refreshToken)
+  setRefreshToken(res, refreshToken)
+  res.redirect(ORIGIN + '/close')
+}

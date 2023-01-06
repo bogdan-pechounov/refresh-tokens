@@ -13,6 +13,8 @@ const config = {
   EMAIL_APP_PASSWORD: undefined,
   GOOGLE_CLIENT_ID: undefined,
   GOOGLE_CLIENT_SECRET: undefined,
+  GITHUB_CLIENT_ID: undefined,
+  GITHUB_CLIENT_SECRET: undefined,
 }
 
 //use env variable if defined and check if missing in production

@@ -5,6 +5,7 @@ import { AppContext } from '../../App'
 import api from '../../utils/api'
 import { getRoot } from '../../utils/utils'
 import { ToastContext } from '../toast/Toast'
+import OAuthButtons from './OAuthButtons'
 
 export function Login() {
   const [name, setName] = useState('')
@@ -147,6 +148,8 @@ export function Login() {
           </div>
         )}
       </div>
+      {/* OAuth */}
+      <OAuthButtons />
       <div className="modal-footer">
         <button
           type="button"

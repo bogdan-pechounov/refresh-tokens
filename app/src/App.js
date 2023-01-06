@@ -8,6 +8,7 @@ import { createContext, useEffect, useState } from 'react'
 import api from './utils/api'
 import ResetPassword from './pages/reset/ResetPassword'
 import { ToastProvider } from './components/toast/Toast'
+import ClosePopUp from './pages/close/ClosePopUp'
 
 export const AppContext = createContext()
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/close" element={<ClosePopUp />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>

@@ -18,19 +18,25 @@ const UserSchema = mongoose.Schema({
     sparse: true, //ignore documents without the email field when determining uniqueness
     validate: [isEmail, 'Please enter a valid email'],
   },
+  profile_picture: String,
   password: String,
   confirmPassword: String,
   hashedPassword: String,
-  refreshTokens: [String],
+  refreshTokens: {
+    type: [String],
+    default: [],
+  },
   resetPassword: {
     token: String,
     expiration: Date,
   },
+  provider: String,
 })
 
 //validate passwords (use a required field)
 UserSchema.path('name').validate(function (v) {
-  const { password, confirmPassword } = this
+  const { password, confirmPassword, provider } = this
+  if (provider) return //no need for password if using oauth
 
   if (password || confirmPassword) {
     if (password?.length < 6) {

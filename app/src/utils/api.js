@@ -42,8 +42,22 @@ class Api {
     return await axiosClient.post(`/auth/reset-password/`, j)
   }
 
-  async google() {
-    return await axiosClient.get('/auth/google')
+  google() {
+    const width = 660
+    const height = 660
+    const left = window.screen.width / 2 - width / 2
+    const top = window.screen.height / 2 - height / 2
+    let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${width},height=${height},left=${left},top=${top}`
+    window.open(BASE_URL + '/auth/google', 'google', params)
+  }
+
+  github() {
+    const width = 660
+    const height = 660
+    const left = window.screen.width / 2 - width / 2
+    const top = window.screen.height / 2 - height / 2
+    let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=${width},height=${height},left=${left},top=${top}`
+    window.open(BASE_URL + '/auth/github', 'github', params)
   }
 }
 

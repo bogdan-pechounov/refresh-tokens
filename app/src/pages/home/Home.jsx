@@ -5,18 +5,13 @@ import api from '../../utils/api'
 function Home() {
   const { user } = useContext(AppContext)
 
-  async function onClick() {
-    try {
-      await api.google()
-    } catch (err) {
-      console.log(err)
-    }
-  }
   return (
     <div>
       <p>{JSON.stringify(user)}</p>
-      <button className='btn btn-primary' onClick={onClick}>
-        Google
+      <img src={user?.profile_picture} alt="profile"></img>
+
+      <button className="btn btn-primary" onClick={() => api.me()}>
+        Test
       </button>
     </div>
   )
