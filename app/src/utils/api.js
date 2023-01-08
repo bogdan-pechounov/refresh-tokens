@@ -26,6 +26,11 @@ axiosClient.interceptors.response.use(
 )
 
 class Api {
+  reset() {
+    axiosClient.defaults.headers['X-Access-Token'] = undefined
+  }
+
+  //#region Auth
   async me() {
     return await axiosClient.get('/auth/me')
   }
@@ -38,7 +43,7 @@ class Api {
     return await axiosClient.post('/auth/login', user)
   }
   async logout() {
-    axiosClient.defaults.headers['X-Access-Token'] = undefined
+    this.reset()
     return await axiosClient.get('/auth/logout')
   }
 
@@ -66,6 +71,32 @@ class Api {
   github() {
     this.open('/auth/github', 'github')
   }
+  //#endregion
+
+  //#region User
+  async getUser() {
+    return await axiosClient.get('/user')
+  }
+
+  async editUser(user) {
+    console.log(user)
+    const formData = new FormData()
+    for (const [key, value] of Object.entries(user)) {
+      console.log(key, value)
+      formData.append(key, value)
+    }
+    return await axiosClient.put('/user', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+  }
+
+  async deleteAccount() {
+    this.reset()
+    return await axiosClient.delete('/user')
+  }
+  //#endregion
 }
 
 export default new Api()

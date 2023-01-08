@@ -2,13 +2,7 @@ const { cookie_options } = require('../utils/tokens')
 
 const tokens = require('csrf')()
 
-async function main() {
-  const secret = await tokens.secret()
-  let token = tokens.create(secret)
-  console.log(secret, token, tokens.verify(secret, token))
-}
-
-exports.csrf = async (req, res, next) => {
+async function csrf(req, res, next) {
   if (req.method === 'GET' || req.method === 'OPTIONS') {
     //set cookie secret and header token
     const secret = await tokens.secret()
@@ -27,3 +21,5 @@ exports.csrf = async (req, res, next) => {
     }
   }
 }
+
+module.exports = csrf

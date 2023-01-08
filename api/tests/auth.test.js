@@ -168,7 +168,6 @@ describe('signup', () => {
     })
 
     const prevAccessToken = response.headers['x-access-token']
-    console.log(response.headers['set-cookie'])
     const prevRefreshToken = agent.jar.getCookie(
       'refreshToken',
       CookieAccessInfo()

@@ -6,21 +6,11 @@ import { AppContext } from '../../App'
 import PasswordStrength from '../../components/password-strength/PasswordStrength'
 import api from '../../utils/api'
 
-//formik
-const initialValues = {
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-}
-
 const validationSchema = Yup.object({
   name: Yup.string()
     .min(4, 'Username should contain at least 4 characters')
     .required('Username required'),
   email: Yup.string().email('Invalid email'),
-  password: Yup.string().required('Password required'),
-  confirmPassword: Yup.string().required('Confirm your password'),
 })
 
 function validate({ password, confirmPassword }) {
@@ -31,17 +21,25 @@ function validate({ password, confirmPassword }) {
   return errors
 }
 
-function SignUp() {
+function EditProfile() {
+  const { user, setUser } = useContext(AppContext)
   const [showPassword, setShowPassword] = useState(false)
-  const { setUser } = useContext(AppContext)
   const navigate = useNavigate()
+
+  if (!user) return
+  const initialValues = {
+    name: user.name,
+    email: user.email,
+    password: '',
+    confirmPassword: '',
+  }
 
   async function onSubmit(values, { setFieldError, setErrors }) {
     //ignore empty string ("A component is changing an uncontrolled input to be controlled"")
     const user = { ...values }
     if (user.email === '') delete user.email
     try {
-      setUser(await api.signup(user))
+      setUser(await api.editUser(user))
       navigate('/')
     } catch (err) {
       setErrors(err.response.data)
@@ -67,6 +65,14 @@ function SignUp() {
     >
       {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
         <Form className="container mt-2">
+          <input
+            id="image"
+            name="image"
+            type="file"
+            onChange={(event) => {
+              setFieldValue('image', event.currentTarget.files[0])
+            }}
+          />
           {/* Username */}
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
@@ -173,4 +179,4 @@ function SignUp() {
   )
 }
 
-export default SignUp
+export default EditProfile

@@ -9,6 +9,7 @@ import api from './utils/api'
 import ResetPassword from './pages/reset/ResetPassword'
 import { ToastProvider } from './components/toast/Toast'
 import ClosePopUp from './pages/close/ClosePopUp'
+import EditProfile from './pages/profile/EditProfile'
 
 export const AppContext = createContext()
 
@@ -31,6 +32,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+
             <Route path="/close" element={<ClosePopUp />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>

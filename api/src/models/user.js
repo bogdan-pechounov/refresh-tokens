@@ -36,7 +36,7 @@ const UserSchema = mongoose.Schema({
 //validate passwords (use a required field)
 UserSchema.path('name').validate(function (v) {
   const { password, confirmPassword, provider } = this
-  if (provider) return //no need for password if using oauth
+  if (provider && !password) return //no need for password if using oauth
 
   if (password || confirmPassword) {
     if (password?.length < 6) {

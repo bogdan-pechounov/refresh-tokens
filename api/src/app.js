@@ -10,7 +10,8 @@ const config = require('./config/config')
 const { ORIGIN, LOG_ENABLED } = require('./config/config')
 const errorHandler = require('./middlewares/errorHandler')
 const { default: helmet } = require('helmet')
-const { csrf } = require('./middlewares/csrfProtection')
+const path = require('path')
+const csrf = require('./middlewares/csrfProtection')
 
 const app = express()
 
@@ -29,6 +30,7 @@ if (LOG_ENABLED) {
 
 //Middlewares
 app.use(express.json()) //json post requests
+app.use('/images', express.static(path.join(__dirname, '..', 'images'))) //expose images
 app.use(
   cors({
     credentials: true,
@@ -47,6 +49,7 @@ app.get('/', (_, res) => {
 
 //Routes
 app.use('/auth', require('./routes/auth'))
+app.use('/user', require('./routes/user'))
 
 //Error handling
 app.use(errorHandler)

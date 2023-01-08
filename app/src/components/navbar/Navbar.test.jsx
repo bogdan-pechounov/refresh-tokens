@@ -22,7 +22,7 @@ describe('Navbar', () => {
     expect(screen.getByRole('navigation')).toBeInTheDocument()
 
     const listItems = screen.getAllByRole('listitem', { hidden: true })
-    expect(listItems).toHaveLength(2)
+    expect(listItems).toHaveLength(3)
 
     const logout = screen.queryByRole('link', { name: 'Logout' })
     expect(logout).not.toBeInTheDocument()
@@ -41,11 +41,8 @@ describe('Navbar', () => {
 
     expect(screen.getByRole('navigation')).toBeInTheDocument()
 
-    const listItems = screen.getAllByRole('listitem')
-    expect(listItems.length).toBe(1)
-
-    const logout = screen.queryByRole('link', { name: 'Logout' })
-    expect(logout).toBeInTheDocument()
+    const avatar = screen.getByRole('img', { name: /avatar/i })
+    expect(avatar).toBeInTheDocument()
   })
 
   test('logout sets user to null', async () => {
