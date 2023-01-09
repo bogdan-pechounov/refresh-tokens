@@ -9,6 +9,8 @@ const {
   GITHUB_CLIENT_SECRET,
 } = require('./config')
 
+if (!GOOGLE_CLIENT_ID || !GITHUB_CLIENT_ID) return //for github actions, valid id is required
+
 passport.use(
   new GoogleStrategy(
     {
