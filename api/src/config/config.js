@@ -10,11 +10,11 @@ const config = {
   DB_URI: 'mongodb://127.0.0.1:27017/forums',
   ACCESS_TOKEN_SECRET: 'secret',
   REFRESH_TOKEN_SECRET: 'secret',
-  EMAIL_APP_PASSWORD: undefined,
-  GOOGLE_CLIENT_ID: undefined,
-  GOOGLE_CLIENT_SECRET: undefined,
-  GITHUB_CLIENT_ID: undefined,
-  GITHUB_CLIENT_SECRET: undefined,
+  EMAIL_APP_PASSWORD: '',
+  GOOGLE_CLIENT_ID: '',
+  GOOGLE_CLIENT_SECRET: '',
+  GITHUB_CLIENT_ID: '',
+  GITHUB_CLIENT_SECRET: '',
 }
 
 //use env variable if defined and check if missing in production
