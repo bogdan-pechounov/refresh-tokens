@@ -15,7 +15,7 @@ const multer = require('multer')
 const {
   editUser,
   deleteUser,
-  createUser,
+  getUser,
 } = require('../controllers/userController')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 const storage = multer.diskStorage({
@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 //Routes
-router.get('/', isAuthenticated, createUser)
+router.get('/', isAuthenticated, getUser)
 
 router.put('/', upload.single('image'), isAuthenticated, editUser)
 

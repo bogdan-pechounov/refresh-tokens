@@ -1,6 +1,6 @@
 const request = require('supertest')
 const app = require('../src/app.js')
-const db = require('./db.js')()
+const db = require('./db.js')
 
 //in memory database
 beforeAll(async () => await db.connect())

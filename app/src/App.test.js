@@ -7,6 +7,7 @@ matchMediaPolyfill(window)
 
 test('renders', async () => {
   render(<App />)
-  await screen.findByRole('link', { name: /logout/i })
+  const avatar = await screen.findByRole('img', { name: /avatar/i })
   expect(screen.getByText('Home')).toBeInTheDocument()
+  expect(avatar).toBeInTheDocument()
 })

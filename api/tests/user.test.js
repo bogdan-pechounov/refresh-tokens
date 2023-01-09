@@ -1,6 +1,6 @@
 const request = require('supertest')
 const app = require('../src/app.js')
-const db = require('./db.js')()
+const db = require('./db.js')
 const User = require('../src/models/user.js')
 
 //in memory database
@@ -20,7 +20,7 @@ async function createAgent() {
 describe('/user', () => {
   it('deletes user', async () => {
     const agent = await createAgent()
-    const response = await agent.post('/auth/signup').send({
+    await agent.post('/auth/signup').send({
       name: 'User',
       email: 'test@test.com',
       password: 'password',

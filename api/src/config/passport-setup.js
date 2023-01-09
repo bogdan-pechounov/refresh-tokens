@@ -16,7 +16,7 @@ passport.use(
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: `${
-        node.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === 'production'
           ? 'https://refresh-tokens-api.onrender.com'
           : ''
       }/auth/google/callback`,
@@ -56,7 +56,7 @@ passport.use(
       clientID: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
       callbackURL: `${
-        node.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === 'production'
           ? 'https://refresh-tokens-api.onrender.com'
           : ''
       }/auth/github/callback`,

@@ -15,6 +15,6 @@ export const handlers = [
     return res(ctx.status(200))
   }),
   rest.get(BASE_URL + '/posts', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json([]))
+    return res(ctx.status(200), ctx.json({ posts: [], count: 0 }))
   }),
 ]

@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require('../src/app.js')
 const sendMail = require('../src/utils/mail.js')
-const db = require('./db.js')()
+const db = require('./db.js')
 const { CookieAccessInfo } = require('cookiejar')
 const User = require('../src/models/user.js')
 
