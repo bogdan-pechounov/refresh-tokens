@@ -21,7 +21,8 @@ const config = {
 for (const key in config) {
   env_var = process.env[key]
   if (env_var) config[key] = env_var
-  if (process.env.NODE_ENV === 'production') throw new Error(`${key} not set`)
+  else if (process.env.NODE_ENV === 'production')
+    throw new Error(`${key} not set`)
 }
 
 //other fields
