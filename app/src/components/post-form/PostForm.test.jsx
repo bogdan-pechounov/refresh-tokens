@@ -1,16 +1,17 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
+import { customRender } from '../../tests/test-utils'
 import PostForm from './PostForm'
 
 describe('Post Form', () => {
   test('hides body', () => {
-    render(<PostForm />)
+    customRender(<PostForm />)
     const body = screen.queryByRole('textbox', { name: /body/i })
     expect(body).not.toBeInTheDocument()
   })
 
   test('shows body', async () => {
-    render(<PostForm />)
+    customRender(<PostForm />)
     const titleInput = screen.getByRole('textbox', { name: /title/i })
     await user.type(titleInput, 'title')
     const body = screen.getByRole('textbox', { name: /body/i })
@@ -18,7 +19,7 @@ describe('Post Form', () => {
   })
 
   test('disables submit button', async () => {
-    render(<PostForm />)
+    customRender(<PostForm />)
     const titleInput = screen.getByRole('textbox', { name: /title/i })
     await user.type(titleInput, 'title')
     const bodyInput = screen.getByRole('textbox', { name: /body/i })
