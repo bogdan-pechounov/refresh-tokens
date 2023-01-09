@@ -50,6 +50,7 @@ app.get('/', (_, res) => {
 //Routes
 app.use('/auth', require('./routes/auth'))
 app.use('/user', require('./routes/user'))
+app.use('/posts', require('./routes/post'))
 
 //Error handling
 app.use(errorHandler)

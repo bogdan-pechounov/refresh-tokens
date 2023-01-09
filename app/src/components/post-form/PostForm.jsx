@@ -1,11 +1,27 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import api from '../../utils/api'
+import { ToastContext } from '../toast/Toast'
 
-function PostForm() {
+function PostForm({ onPostCreated }) {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+  const { show, setTitle: setToastTitle, setMsg } = useContext(ToastContext)
 
+  async function onSubmit(e) {
+    e.preventDefault()
+    try {
+      const post = await api.createPost({ title, body })
+      onPostCreated(post)
+      setTitle('')
+      setBody('')
+    } catch (err) {
+      setToastTitle('Error')
+      setMsg(Object.values(err.response.data))
+      show()
+    }
+  }
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <div className="mb-3">
         <label htmlFor="title" className="form-label">
           Title

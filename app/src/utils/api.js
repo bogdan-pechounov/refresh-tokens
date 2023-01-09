@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const BASE_URL = 'http://localhost:3001'
+export const BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001'
 
 const axiosClient = axios.create({
   baseURL: BASE_URL,
@@ -79,7 +79,6 @@ class Api {
   }
 
   async editUser(user) {
-    console.log(user)
     const formData = new FormData()
     for (const [key, value] of Object.entries(user)) {
       console.log(key, value)
@@ -95,6 +94,16 @@ class Api {
   async deleteAccount() {
     this.reset()
     return await axiosClient.delete('/user')
+  }
+  //#endregion
+
+  //#region Post
+  async createPost(post) {
+    return await axiosClient.post('/posts', post)
+  }
+
+  async getPosts() {
+    return await axiosClient.get('/posts')
   }
   //#endregion
 }
