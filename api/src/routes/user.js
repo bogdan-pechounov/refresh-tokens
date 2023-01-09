@@ -37,7 +37,7 @@ router.put('/', upload.single('image'), isAuthenticated, async (req, res) => {
   const { userId } = req
   const { name, email, password, confirmPassword } = req.body
   let user = await User.findById(userId)
-  user.profile_picture = req.file.filename
+  if (req.file) user.profile_picture = req.file.filename
   for (const [key, val] of Object.entries({
     name,
     email,

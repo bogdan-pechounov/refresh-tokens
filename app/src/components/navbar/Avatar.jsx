@@ -38,6 +38,7 @@ function Avatar() {
         alt="Avatar"
         data-bs-toggle="dropdown"
         loading="lazy"
+        // referrerPolicy="no-referrer"
         onError={(e) => {
           e.target.src = defaultImg
         }}

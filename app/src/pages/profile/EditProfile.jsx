@@ -6,6 +6,7 @@ import { AppContext } from '../../App'
 import PasswordStrength from '../../components/password-strength/PasswordStrength'
 import api from '../../utils/api'
 
+//validation
 const validationSchema = Yup.object({
   name: Yup.string()
     .min(4, 'Username should contain at least 4 characters')
@@ -65,10 +66,15 @@ function EditProfile() {
     >
       {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
         <Form className="container mt-2">
+          {/* Image Upload */}
+          <label htmlFor="image" className="form-label">
+            Profile Picture
+          </label>
           <input
             id="image"
             name="image"
             type="file"
+            className="form-control"
             onChange={(event) => {
               setFieldValue('image', event.currentTarget.files[0])
             }}
@@ -107,7 +113,7 @@ function EditProfile() {
               onKeyDown={handleEnter}
             />
             <div id="emailHelp" className="form-text">
-              Email is optional. An email will be sent upon sign up.
+              An email will be sent upon sign up.
             </div>
             <ErrorMessage name="email" component="div" className="error" />
           </div>

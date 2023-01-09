@@ -59,11 +59,15 @@ export function Login() {
 
   async function handleResetPassword(e) {
     e.preventDefault()
-    await api.requestNewPassword(confirmEmail)
-    close()
-    show()
-    setTitle('Reset password')
-    setMsg('An email has been sent')
+    try {
+      await api.requestNewPassword(confirmEmail)
+      close()
+      show()
+      setTitle('Reset password')
+      setMsg('An email has been sent')
+    } catch (err) {
+      setErrorMessage(err.response.data)
+    }
   }
 
   return (

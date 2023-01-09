@@ -2,3 +2,4 @@ node_modules
 api/access.log
 .env
 images
+coverage
