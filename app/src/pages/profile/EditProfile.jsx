@@ -38,7 +38,8 @@ function EditProfile() {
   async function onSubmit(values, { setFieldError, setErrors }) {
     //ignore empty string ("A component is changing an uncontrolled input to be controlled"")
     const user = { ...values }
-    if (user.email === '') delete user.email
+    if (!user.email) delete user.email
+    if (!user.password) delete user.password
     try {
       setUser(await api.editUser(user))
       navigate('/')

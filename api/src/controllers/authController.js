@@ -51,7 +51,6 @@ exports.logout = async (req, res) => {
 exports.signup = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body
   const user = await new User({ name, email, password, confirmPassword }).save()
-
   //JWT
   const refreshToken = createRefreshToken(user._id)
   addRefreshToken(user._id, refreshToken)

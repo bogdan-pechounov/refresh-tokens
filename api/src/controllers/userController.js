@@ -9,6 +9,7 @@ exports.createUser = async (req, res) => {
 exports.editUser = async (req, res) => {
   const { userId } = req
   const { name, email, password, confirmPassword } = req.body
+  console.log(email)
   let user = await User.findById(userId)
   if (req.file) user.profile_picture = req.file.filename
   for (const [key, val] of Object.entries({

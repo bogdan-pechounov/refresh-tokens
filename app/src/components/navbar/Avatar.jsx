@@ -19,9 +19,14 @@ function isValidUrl(url) {
 function Avatar() {
   const { user, setUser } = useContext(AppContext)
 
-  const profile_picture = isValidUrl(user.profile_picture)
-    ? user.profile_picture
-    : `${BASE_URL}/images/${user.profile_picture}`
+  let profile_picture = user.profile_picture
+  if (profile_picture) {
+    profile_picture = isValidUrl(user.profile_picture)
+      ? user.profile_picture
+      : `${BASE_URL}/images/${user.profile_picture}`
+  } else {
+    profile_picture = defaultImg
+  }
 
   async function logout() {
     await api.logout()
