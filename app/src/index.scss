@@ -7,6 +7,10 @@ $primary: #fff77e;
   color: red;
 }
 
+.card-text {
+  white-space: pre-line;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

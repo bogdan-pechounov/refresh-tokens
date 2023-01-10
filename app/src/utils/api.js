@@ -106,6 +106,10 @@ class Api {
   async getPosts() {
     return await axiosClient.get('/posts')
   }
+
+  async deletePost(id) {
+    return await axiosClient.delete('/posts/' + id)
+  }
   //#endregion
 }
 
