@@ -1,3 +1,4 @@
+const Post = require('../models/post')
 const User = require('../models/user')
 
 exports.getUser = async (req, res) => {
@@ -23,9 +24,9 @@ exports.editUser = async (req, res) => {
   res.send(user)
 }
 
-//todo delete posts
 exports.deleteUser = async (req, res) => {
   const { userId: id } = req
   await User.deleteOne({ id })
+  await Post.deleteMany({ user: id })
   res.send('Account deleted')
 }
