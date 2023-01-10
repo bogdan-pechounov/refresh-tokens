@@ -23,6 +23,21 @@ function Home() {
     setPosts((posts) => [post, ...posts])
   }
 
+  async function onPostEdited(post) {
+    try {
+      const newPost = await api.editPost(post)
+      setPosts((posts) =>
+        posts.map((post) =>
+          post._id === newPost._id ? { ...newPost, user } : post
+        )
+      )
+    } catch (err) {
+      setTitle('Error')
+      setMsg(Object.values(err.response.data))
+      show()
+    }
+  }
+
   async function onPostDeleted(postId) {
     try {
       await api.deletePost(postId)
@@ -54,7 +69,11 @@ function Home() {
         </section>
       )}
       <section className="mt-3">
-        <PostList posts={posts} onPostDeleted={onPostDeleted} />
+        <PostList
+          posts={posts}
+          onPostDeleted={onPostDeleted}
+          onPostEdited={onPostEdited}
+        />
       </section>
     </div>
   )

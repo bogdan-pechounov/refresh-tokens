@@ -110,6 +110,10 @@ class Api {
   async deletePost(id) {
     return await axiosClient.delete('/posts/' + id)
   }
+
+  async editPost(post) {
+    return await axiosClient.put('/posts/' + post._id, post)
+  }
   //#endregion
 }
 
