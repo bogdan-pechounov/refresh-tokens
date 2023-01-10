@@ -12,3 +12,10 @@ exports.createPost = async (req, res) => {
   const post = await new Post({ title, body, user }).save()
   res.status(201).send(post)
 }
+
+exports.deletePost = async (req, res) => {
+  const { userId } = req
+  const postId = req.params.id
+  await Post.deleteOne({ _id: postId, user: userId })
+  res.send('Post deleted')
+}
