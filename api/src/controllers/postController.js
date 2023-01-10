@@ -25,7 +25,6 @@ exports.editPost = async (req, res) => {
   } else {
     post.title = title
     post.body = body
-    console.log(post)
     const newPost = await post.save()
     res.send(newPost)
   }
