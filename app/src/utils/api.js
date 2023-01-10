@@ -82,7 +82,6 @@ class Api {
   async editUser(user) {
     const formData = new FormData()
     for (const [key, value] of Object.entries(user)) {
-      console.log(key, value)
       formData.append(key, value)
     }
     return await axiosClient.put('/user', formData, {
