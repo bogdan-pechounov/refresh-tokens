@@ -1,5 +1,6 @@
 const Post = require('../models/post')
 const User = require('../models/user')
+const { clearCookie } = require('../utils/tokens')
 
 exports.getUser = async (req, res) => {
   const { userId } = req
@@ -25,8 +26,9 @@ exports.editUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-  const { userId: id } = req
-  await User.deleteOne({ id })
-  await Post.deleteMany({ user: id })
+  const { userId: _id } = req
+  await User.deleteOne({ _id })
+  await Post.deleteMany({ user: _id })
+  clearCookie(res)
   res.send('Account deleted')
 }

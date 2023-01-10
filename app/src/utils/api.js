@@ -44,8 +44,8 @@ class Api {
     return await axiosClient.post('/auth/login', user)
   }
   async logout() {
+    await axiosClient.get('/auth/logout')
     this.reset()
-    return await axiosClient.get('/auth/logout')
   }
 
   async requestNewPassword(email) {
@@ -92,8 +92,8 @@ class Api {
   }
 
   async deleteAccount() {
+    await axiosClient.delete('/user')
     this.reset()
-    return await axiosClient.delete('/user')
   }
   //#endregion
 
